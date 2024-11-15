@@ -1,0 +1,3 @@
+admin:password
+alice:qwerty1234
+bob:sponge24

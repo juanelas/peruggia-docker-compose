@@ -1,0 +1,4 @@
+.env
+./users.txt
+*.yml
+!docker-compose.yml
