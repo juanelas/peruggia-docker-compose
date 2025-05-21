@@ -1,7 +1,7 @@
 services:
   mysql:
     image: mysql:5.7
-    container_name: ${DB_HOST:-mysql}
+    container_name: ${DB_HOST:-peruggiamysql}
     restart: always
     volumes:
       - peruggiadb:/var/lib/mysql
@@ -10,7 +10,9 @@ services:
       MYSQL_USER: ${DB_USER:-peruggiauser}
       MYSQL_PASSWORD: ${DB_PASS:-peruggiapass}
       MYSQL_DATABASE: ${DB_NAME:-peruggiadb}
-  php:
+    networks:
+      - peruggia
+  apache_php:
     build: .
     container_name: peruggia
     ports:
@@ -18,16 +20,17 @@ services:
     volumes:
       - ./peruggia:/var/www/html/
     environment:
-      DB_HOST: ${DB_HOST:-mysql}
+      DB_HOST: ${DB_HOST:-peruggiamysql}
       DB_USER: ${DB_USER:-peruggiauser}
       DB_PASS: ${DB_PASS:-peruggiapass}
       DB_NAME: ${DB_NAME:-peruggiadb}
       EXTERNAL_URL: "${EXTERNAL_URL:-http://localhost:$EXPOSED_PORT}"
+    networks:
+      - peruggia
 
 volumes:
   peruggiadb:
 
 networks:
-  default:
-    external: true
-    name: reverse-proxy
+  peruggia:
+    name: peruggia
